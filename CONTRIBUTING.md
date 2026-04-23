@@ -7,7 +7,7 @@ First, thank you for considering contributing to AgentBrowser! This project reli
 1. **Fork** the repository
 2. **Clone** your fork locally:
    ```bash
-   git clone https://github.com/YOUR_USERNAME/agent-browser.git
+   git clone https://github.com/smouj/agent-browser.git
    cd agent-browser
    ```
 3. **Install** dependencies:

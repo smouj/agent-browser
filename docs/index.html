@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AgentBrowser - AI-Powered Browser Automation Platform</title>
+  <meta name="description" content="Give any AI agent a real browser. REST API + Web Dashboard + Vision AI. Built with Playwright, Next.js, and TypeScript.">
+  <meta name="keywords" content="browser automation, AI agent, Playwright, REST API, Vision AI, headless browser, web scraping, LLM">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="AgentBrowser - AI-Powered Browser Automation Platform">
+  <meta property="og:description" content="Give any AI agent a real browser. REST API + Web Dashboard + Vision AI.">
+  <meta property="og:image" content="https://raw.githubusercontent.com/smouj/agent-browser/main/assets/og-image.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://github.com/smouj/agent-browser">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="AgentBrowser">
+  <meta name="twitter:description" content="AI-Powered Browser Automation Platform">
+  <meta name="twitter:image" content="https://raw.githubusercontent.com/smouj/agent-browser/main/assets/og-image.png">
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #0a0a0f;
+      --bg-secondary: #111118;
+      --bg-tertiary: #1a1a24;
+      --fg: #e4e4e7;
+      --fg-muted: #71717a;
+      --accent: #10b981;
+      --accent-hover: #059669;
+      --accent-glow: rgba(16, 185, 129, 0.15);
+      --cyan: #06b6d4;
+      --border: #27272a;
+      --code-bg: #18181b;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: var(--accent); text-decoration: none; transition: color 0.2s; }
+    a:hover { color: var(--accent-hover); }
+
+    code, pre {
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+
+    code {
+      padding: 2px 6px;
+      font-size: 0.85em;
+      color: var(--cyan);
+    }
+
+    pre {
+      padding: 1.25rem 1.5rem;
+      overflow-x: auto;
+      font-size: 0.85rem;
+      line-height: 1.7;
+    }
+
+    pre code {
+      padding: 0;
+      background: none;
+      border: none;
+      color: var(--fg);
+    }
+
+    /* ─── Nav ─── */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(10, 10, 15, 0.8);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0.75rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--fg);
+    }
+
+    .nav-brand img { width: 32px; height: 32px; border-radius: 8px; }
+
+    .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+    .nav-links a {
+      color: var(--fg-muted);
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--fg); }
+
+    .nav-gh {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      padding: 0.4rem 1rem;
+      border-radius: 8px;
+      color: var(--fg);
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    .nav-gh:hover {
+      background: var(--accent-glow);
+      border-color: var(--accent);
+      color: var(--fg);
+    }
+
+    /* ─── Hero ─── */
+    .hero {
+      padding: 8rem 1.5rem 4rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 800px;
+      background: radial-gradient(circle, rgba(16,185,129,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--accent-glow);
+      border: 1px solid rgba(16,185,129,0.3);
+      padding: 0.35rem 1rem;
+      border-radius: 100px;
+      font-size: 0.8rem;
+      color: var(--accent);
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.25rem;
+    }
+
+    .hero h1 .gradient {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--cyan) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      font-size: 1.15rem;
+      color: var(--fg-muted);
+      max-width: 640px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.7;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.7rem 1.5rem;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+    }
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(16,185,129,0.3);
+      color: #fff;
+    }
+
+    .btn-secondary {
+      background: var(--bg-tertiary);
+      color: var(--fg);
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover {
+      background: var(--border);
+      color: #fff;
+    }
+
+    /* ─── Stats ─── */
+    .stats {
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+      padding: 2rem 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .stat {
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: var(--accent);
+    }
+
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--fg-muted);
+      margin-top: 0.25rem;
+    }
+
+    /* ─── Sections ─── */
+    section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 4rem 1.5rem;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 0.75rem;
+      letter-spacing: -0.02em;
+    }
+
+    .section-sub {
+      color: var(--fg-muted);
+      font-size: 1rem;
+      margin-bottom: 3rem;
+      max-width: 600px;
+    }
+
+    /* ─── Features Grid ─── */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .feature-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: all 0.3s;
+    }
+
+    .feature-card:hover {
+      border-color: rgba(16,185,129,0.4);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    }
+
+    .feature-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      margin-bottom: 1rem;
+    }
+
+    .feature-card h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .feature-card p {
+      color: var(--fg-muted);
+      font-size: 0.875rem;
+      line-height: 1.6;
+    }
+
+    /* ─── Screenshots ─── */
+    .screenshots-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .screenshot-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: all 0.3s;
+    }
+
+    .screenshot-card:hover {
+      border-color: rgba(16,185,129,0.4);
+    }
+
+    .screenshot-card img {
+      width: 100%;
+      display: block;
+    }
+
+    .screenshot-card .caption {
+      padding: 1rem 1.25rem;
+      font-size: 0.85rem;
+      color: var(--fg-muted);
+    }
+
+    /* ─── Guide Steps ─── */
+    .guide-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      max-width: 800px;
+    }
+
+    .guide-step {
+      display: flex;
+      gap: 1.25rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: all 0.3s;
+    }
+
+    .guide-step:hover {
+      border-color: rgba(16,185,129,0.4);
+    }
+
+    .step-number {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--accent-glow);
+      border: 2px solid var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.9rem;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .step-content h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .step-content p {
+      color: var(--fg-muted);
+      font-size: 0.875rem;
+      margin-bottom: 0.75rem;
+      line-height: 1.6;
+    }
+
+    /* ─── Integration Cards ─── */
+    .integration-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .integration-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.75rem;
+      transition: all 0.3s;
+    }
+
+    .integration-card:hover {
+      border-color: rgba(16,185,129,0.4);
+    }
+
+    .integration-card h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .integration-card p {
+      color: var(--fg-muted);
+      font-size: 0.875rem;
+      line-height: 1.7;
+      margin-bottom: 1rem;
+    }
+
+    .integration-card ol, .integration-card ul {
+      padding-left: 1.25rem;
+      color: var(--fg-muted);
+      font-size: 0.85rem;
+      line-height: 1.8;
+    }
+
+    .integration-card li { margin-bottom: 0.25rem; }
+
+    /* ─── Architecture ─── */
+    .arch-diagram {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      line-height: 1.6;
+      overflow-x: auto;
+      color: var(--fg-muted);
+    }
+
+    .arch-diagram .layer {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .arch-diagram .layer-title {
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    /* ─── API Table ─── */
+    .api-table-wrap {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .api-table-wrap h3 {
+      padding: 1.25rem 1.5rem;
+      font-size: 1rem;
+      font-weight: 700;
+      border-bottom: 1px solid var(--border);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th {
+      text-align: left;
+      padding: 0.75rem 1.5rem;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--fg-muted);
+      border-bottom: 1px solid var(--border);
+      font-weight: 600;
+    }
+
+    td {
+      padding: 0.75rem 1.5rem;
+      font-size: 0.85rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    tr:last-child td { border-bottom: none; }
+
+    .method {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .method-get { background: rgba(16,185,129,0.15); color: var(--accent); }
+    .method-post { background: rgba(6,182,212,0.15); color: var(--cyan); }
+    .method-delete { background: rgba(239,68,68,0.15); color: #ef4444; }
+
+    /* ─── Footer ─── */
+    .footer {
+      border-top: 1px solid var(--border);
+      padding: 3rem 1.5rem;
+      text-align: center;
+      color: var(--fg-muted);
+      font-size: 0.85rem;
+    }
+
+    .footer a { color: var(--fg); }
+
+    .footer .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .hero { padding: 6rem 1.5rem 3rem; }
+      .hero h1 { font-size: 2rem; }
+      .stats { gap: 1.5rem; }
+      .screenshots-grid { grid-template-columns: 1fr; }
+      .integration-grid { grid-template-columns: 1fr; }
+      .features-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ─── Syntax Highlighting (simple) ─── */
+    .kw { color: #c678dd; }
+    .str { color: #98c379; }
+    .cm { color: #5c6370; font-style: italic; }
+    .fn { color: #61afef; }
+    .num { color: #d19a66; }
+    .op { color: #56b6c2; }
+  </style>
+</head>
+<body>
+
+  <!-- ─── Navigation ─── -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <div class="nav-brand">
+        <img src="https://raw.githubusercontent.com/smouj/agent-browser/main/assets/logo.png" alt="AgentBrowser" />
+        AgentBrowser
+      </div>
+      <div class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#screenshots">Screenshots</a>
+        <a href="#quickstart">Quick Start</a>
+        <a href="#integrations">Integrations</a>
+        <a href="#api">API</a>
+      </div>
+      <a href="https://github.com/smouj/agent-browser" class="nav-gh">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </nav>
+
+  <!-- ─── Hero ─── -->
+  <section class="hero">
+    <div class="hero-badge">
+      <span>&#9889;</span> Open Source &middot; v1.0.0 &middot; MIT License
+    </div>
+    <h1>
+      Give any AI agent<br>
+      a <span class="gradient">real browser</span>
+    </h1>
+    <p>
+      AgentBrowser is an open-source browser automation platform designed to be the hands and eyes of AI agents.
+      Control real browsers via REST API, with Vision AI that lets LLMs see and understand web pages.
+    </p>
+    <div class="hero-actions">
+      <a href="#quickstart" class="btn btn-primary">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        Get Started
+      </a>
+      <a href="https://github.com/smouj/agent-browser" class="btn btn-secondary">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        View Source
+      </a>
+    </div>
+  </section>
+
+  <!-- ─── Stats ─── -->
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-value">3</div>
+      <div class="stat-label">Browser Engines</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">25+</div>
+      <div class="stat-label">Browser Actions</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">8</div>
+      <div class="stat-label">REST Endpoints</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">100%</div>
+      <div class="stat-label">TypeScript</div>
+    </div>
+  </div>
+
+  <!-- ─── Features ─── -->
+  <section id="features">
+    <div class="section-title">Built for AI Agents</div>
+    <div class="section-sub">Not a testing tool. A browser that AI agents can see, understand, and control through a clean REST API.</div>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(16,185,129,0.12)">&#127760;</div>
+        <h3>Multi-Browser Support</h3>
+        <p>Chromium, Firefox, and WebKit via Playwright. Switch between engines per session with full configuration for viewport, proxy, user agent, locale, and timezone.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(6,182,212,0.12)">&#128065;</div>
+        <h3>Vision AI System</h3>
+        <p>Screenshots, simplified DOM trees, accessibility trees, and interactive element detection. Everything an LLM needs to understand a page and decide what to do next.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(168,85,247,0.12)">&#128279;</div>
+        <h3>REST API</h3>
+        <p>8 clean JSON endpoints for session management, 25+ browser actions, vision snapshots, cookies, and action logs. Compatible with any LLM, CLI, or SDK.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(245,158,11,0.12)">&#128274;</div>
+        <h3>Session Persistence</h3>
+        <p>Cookies, localStorage, and browser state are preserved across requests and sessions. Agents can pick up exactly where they left off.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(239,68,68,0.12)">&#128225;</div>
+        <h3>WebSocket Real-Time</h3>
+        <p>Live events for actions, screenshots, and session changes via Socket.IO. Build reactive dashboards and responsive AI agent loops.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(34,197,94,0.12)">&#128187;</div>
+        <h3>Web Dashboard</h3>
+        <p>Professional dark-themed UI with session sidebar, live screenshot preview, action executor, Vision AI panel, and complete action log viewer.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Screenshots ─── -->
+  <section id="screenshots">
+    <div class="section-title">See It In Action</div>
+    <div class="section-sub">A professional dashboard for monitoring and controlling browser sessions in real-time.</div>
+
+    <div class="screenshots-grid">
+      <div class="screenshot-card">
+        <img src="https://raw.githubusercontent.com/smouj/agent-browser/main/assets/screenshot-dashboard.png" alt="AgentBrowser Dashboard" loading="lazy">
+        <div class="caption"><strong>Web Dashboard</strong> &mdash; Session management, live screenshots, and browser control panel</div>
+      </div>
+      <div class="screenshot-card">
+        <img src="https://raw.githubusercontent.com/smouj/agent-browser/main/assets/screenshot-vision.png" alt="Vision AI Panel" loading="lazy">
+        <div class="caption"><strong>Vision AI</strong> &mdash; Screenshot, DOM tree, interactive elements, and page metadata</div>
+      </div>
+      <div class="screenshot-card">
+        <img src="https://raw.githubusercontent.com/smouj/agent-browser/main/assets/screenshot-api.png" alt="REST API Usage" loading="lazy">
+        <div class="caption"><strong>REST API</strong> &mdash; Full programmatic control via clean JSON endpoints</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Quick Start ─── -->
+  <section id="quickstart">
+    <div class="section-title">Quick Start Guide</div>
+    <div class="section-sub">Get AgentBrowser running in under 2 minutes. Zero configuration needed for local development.</div>
+
+    <div class="guide-steps">
+      <div class="guide-step">
+        <div class="step-number">1</div>
+        <div class="step-content">
+          <h3>Clone &amp; Install</h3>
+          <p>Clone the repository and install dependencies. Playwright browsers are installed automatically.</p>
+          <pre><code><span class="cm"># Clone the repository</span>
+git clone https://github.com/smouj/agent-browser.git
+cd agent-browser
+
+<span class="cm"># Install dependencies &amp; setup</span>
+bun install
+bun run db:push
+bunx playwright install chromium</code></pre>
+        </div>
+      </div>
+
+      <div class="guide-step">
+        <div class="step-number">2</div>
+        <div class="step-content">
+          <h3>Start the Server</h3>
+          <p>Run the development server. The dashboard will be available at port 3000.</p>
+          <pre><code><span class="cm"># Development mode (hot reload)</span>
+bun run dev
+
+<span class="cm"># Production mode</span>
+bun run build && bun run start</code></pre>
+        </div>
+      </div>
+
+      <div class="guide-step">
+        <div class="step-number">3</div>
+        <div class="step-content">
+          <h3>Create a Browser Session</h3>
+          <p>Create a session via the REST API or the web dashboard. Each session gets its own isolated browser context with persistent cookies and storage.</p>
+          <pre><code>curl -X POST http://localhost:3000/api/browser/sessions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "my-agent-session",
+    "browserType": "chromium",
+    "headless": true
+  }'</code></pre>
+        </div>
+      </div>
+
+      <div class="guide-step">
+        <div class="step-number">4</div>
+        <div class="step-content">
+          <h3>Navigate &amp; Interact</h3>
+          <p>Navigate to any URL, click elements, type text, scroll, take screenshots, and execute JavaScript &mdash; all via simple REST calls.</p>
+          <pre><code><span class="cm"># Navigate to a page</span>
+curl -X POST http://localhost:3000/api/browser/sessions/<span class="op">{id}</span>/action \
+  -H "Content-Type: application/json" \
+  -d '{"action":"navigate","target":"https://news.ycombinator.com"}'
+
+<span class="cm"># Get Vision AI snapshot</span>
+curl -X POST http://localhost:3000/api/browser/sessions/<span class="op">{id}</span>/vision \
+  -H "Content-Type: application/json" \
+  -d '{}'</code></pre>
+        </div>
+      </div>
+
+      <div class="guide-step">
+        <div class="step-number">5</div>
+        <div class="step-content">
+          <h3>Connect Your AI Agent</h3>
+          <p>Define AgentBrowser as a tool in your LLM's function-calling schema. The agent can create sessions, navigate, observe pages via Vision AI, and execute actions autonomously. See the <a href="#integrations">Integration Guide</a> below for OpenClaw, Hermes, and custom agent examples.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Integrations ─── -->
+  <section id="integrations">
+    <div class="section-title">AI Agent Integration Guide</div>
+    <div class="section-sub">Connect AgentBrowser to any AI agent framework. Here are step-by-step guides for the most popular platforms.</div>
+
+    <div class="integration-grid">
+      <!-- OpenClaw -->
+      <div class="integration-card">
+        <h3>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+          OpenClaw
+        </h3>
+        <p>OpenClaw is an open-source AI agent framework that uses tool-calling to interact with external services. AgentBrowser integrates as a set of browser control tools.</p>
+
+        <strong style="font-size:0.8rem;color:var(--fg)">Step-by-step setup:</strong>
+        <ol>
+          <li><strong>Start AgentBrowser:</strong> <code>bun run dev</code> (default: <code>http://localhost:3000</code>)</li>
+          <li><strong>Create a tool definition file</strong> in your OpenClaw project (<code>tools/browser.yaml</code>):</li>
+        </ol>
+        <pre style="margin:0.75rem 0;font-size:0.78rem"><code><span class="cm"># tools/browser.yaml</span>
+name: browser_navigate
+description: "Navigate the browser to a URL"
+endpoint: "http://localhost:3000/api/browser/sessions/{session_id}/action"
+method: POST
+parameters:
+  session_id:
+    type: string
+    description: "Active browser session ID"
+  action:
+    type: string
+    default: "navigate"
+  target:
+    type: string
+    description: "URL to navigate to"</code></pre>
+        <ol start="3">
+          <li><strong>Register tools</strong> for all actions: <code>browser_click</code>, <code>browser_type</code>, <code>browser_vision</code>, <code>browser_screenshot</code>, <code>browser_scroll</code>, etc.</li>
+          <li><strong>Create a session</strong> at agent startup and pass the <code>session_id</code> to all tool calls</li>
+          <li><strong>Use the Vision AI tool</strong> (<code>/vision</code> endpoint) to let the agent "see" the page before deciding what to do</li>
+          <li><strong>Close the session</strong> when the agent's task is complete via <code>DELETE /sessions/{id}</code></li>
+        </ol>
+
+        <div style="margin-top:1rem;padding:0.75rem;background:var(--accent-glow);border-radius:8px;border:1px solid rgba(16,185,129,0.3);font-size:0.8rem;color:var(--accent)">
+          &#128161; <strong>Tip:</strong> Define a <code>browser_create_session</code> tool so the agent can manage its own browser lifecycle autonomously.
+        </div>
+      </div>
+
+      <!-- Hermes -->
+      <div class="integration-card">
+        <h3>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#06b6d4" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+          Hermes
+        </h3>
+        <p>Hermes is a modular AI agent runtime that supports MCP (Model Context Protocol) servers. AgentBrowser can be exposed as an MCP server for native integration.</p>
+
+        <strong style="font-size:0.8rem;color:var(--fg)">Step-by-step setup:</strong>
+        <ol>
+          <li><strong>Install and start AgentBrowser:</strong> <code>bun run dev</code></li>
+          <li><strong>Add the MCP server configuration</strong> to your Hermes config file (<code>hermes.config.yaml</code>):</li>
+        </ol>
+        <pre style="margin:0.75rem 0;font-size:0.78rem"><code><span class="cm"># hermes.config.yaml</span>
+mcp_servers:
+  agentbrowser:
+    type: "rest"
+    base_url: "http://localhost:3000/api/browser"
+    tools:
+      - name: "create_session"
+        path: "/sessions"
+        method: "POST"
+        description: "Create a new browser session"
+      - name: "execute_action"
+        path: "/sessions/{session_id}/action"
+        method: "POST"
+        description: "Execute a browser action"
+      - name: "get_vision"
+        path: "/sessions/{session_id}/vision"
+        method: "POST"
+        description: "Get AI vision snapshot of page"
+      - name: "close_session"
+        path: "/sessions/{session_id}"
+        method: "DELETE"
+        description: "Close a browser session"</code></pre>
+        <ol start="3">
+          <li><strong>Restart Hermes</strong> to load the new MCP server</li>
+          <li><strong>Ask Hermes</strong> to browse the web: "Go to Hacker News and find the top 5 stories about AI"</li>
+          <li><strong>Hermes will:</strong> Create a session &rarr; Navigate &rarr; Get vision snapshot &rarr; Read interactive elements &rarr; Extract data &rarr; Close session</li>
+        </ol>
+
+        <div style="margin-top:1rem;padding:0.75rem;background:rgba(6,182,212,0.1);border-radius:8px;border:1px solid rgba(6,182,212,0.3);font-size:0.8rem;color:var(--cyan)">
+          &#128161; <strong>Tip:</strong> For persistent sessions across Hermes conversations, don't close the session &mdash; pass the <code>session_id</code> to the next conversation.
+        </div>
+      </div>
+
+      <!-- Custom Python Agent -->
+      <div class="integration-card">
+        <h3>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="2"><polyline points="16,18 22,12 16,6"/><polyline points="8,6 2,12 8,18"/></svg>
+          Custom Python Agent
+        </h3>
+        <p>Build your own AI agent with any LLM (OpenAI, Anthropic, Ollama, etc.) using the REST API. Here's a complete working example.</p>
+
+        <pre style="margin:0.75rem 0;font-size:0.75rem"><code><span class="kw">import</span> requests
+
+BASE = <span class="str">"http://localhost:3000/api/browser/sessions"</span>
+
+<span class="cm"># 1. Create session</span>
+s = requests.post(BASE, json={
+    <span class="str">"name"</span>: <span class="str">"python-agent"</span>,
+    <span class="str">"browserType"</span>: <span class="str">"chromium"</span>,
+    <span class="str">"headless"</span>: <span class="kw">True</span>
+}).json()
+sid = s[<span class="str">"id"</span>]
+
+<span class="cm"># 2. Navigate</span>
+requests.post(f<span class="str">"{BASE}/{sid}/action"</span>, json={
+    <span class="str">"action"</span>: <span class="str">"navigate"</span>,
+    <span class="str">"target"</span>: <span class="str">"https://news.ycombinator.com"</span>
+})
+
+<span class="cm"># 3. Get vision (for LLM)</span>
+vision = requests.post(
+    f<span class="str">"{BASE}/{sid}/vision"</span>, json={}
+).json()
+
+<span class="cm"># 4. Pass vision.interactiveElements</span>
+<span class="cm">#    to your LLM for decision-making</span>
+elements = vision[<span class="str">"interactiveElements"</span>]
+<span class="kw">for</span> el <span class="kw">in</span> elements:
+    <span class="fn">print</span>(f<span class="str">"{el['type']}: {el['text']}"</span>)
+
+<span class="cm"># 5. Clean up</span>
+requests.delete(f<span class="str">"{BASE}/{sid}"</span>)</code></pre>
+
+        <div style="margin-top:1rem;padding:0.75rem;background:rgba(168,85,247,0.1);border-radius:8px;border:1px solid rgba(168,85,247,0.3);font-size:0.8rem;color:#a855f7">
+          &#128161; <strong>Tip:</strong> Combine with <code>openai</code> Python SDK to create a full autonomous agent loop: observe &rarr; think &rarr; act &rarr; repeat.
+        </div>
+      </div>
+
+      <!-- OpenAI Function Calling -->
+      <div class="integration-card">
+        <h3>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2z"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+          OpenAI Function Calling
+        </h3>
+        <p>Define AgentBrowser as an OpenAI tool-calling function. Compatible with GPT-4o, GPT-4, GPT-3.5-turbo, and any model that supports function calling.</p>
+
+        <pre style="margin:0.75rem 0;font-size:0.75rem"><code><span class="cm"># Define tools for your OpenAI agent</span>
+tools = [{
+    <span class="str">"type"</span>: <span class="str">"function"</span>,
+    <span class="str">"function"</span>: {
+        <span class="str">"name"</span>: <span class="str">"browser_navigate"</span>,
+        <span class="str">"description"</span>: <span class="str">"Navigate browser to URL"</span>,
+        <span class="str">"parameters"</span>: {
+            <span class="str">"type"</span>: <span class="str">"object"</span>,
+            <span class="str">"properties"</span>: {
+                <span class="str">"url"</span>: {<span class="str">"type"</span>: <span class="str">"string"</span>}
+            },
+            <span class="str">"required"</span>: [<span class="str">"url"</span>]
+        }
+    }
+}, {
+    <span class="str">"type"</span>: <span class="str">"function"</span>,
+    <span class="str">"function"</span>: {
+        <span class="str">"name"</span>: <span class="str">"browser_vision"</span>,
+        <span class="str">"description"</span>: <span class="str">"See the current page"</span>,
+        <span class="str">"parameters"</span>: {
+            <span class="str">"type"</span>: <span class="str">"object"</span>,
+            <span class="str">"properties"</span>: {
+                <span class="str">"full_page"</span>: {
+                    <span class="str">"type"</span>: <span class="str">"boolean"</span>,
+                    <span class="str">"default"</span>: <span class="kw">false</span>
+                }
+            }
+        }
+    }
+}]</code></pre>
+
+        <div style="margin-top:1rem;padding:0.75rem;background:rgba(34,197,94,0.1);border-radius:8px;border:1px solid rgba(34,197,94,0.3);font-size:0.8rem;color:#22c55e">
+          &#128161; <strong>Tip:</strong> Add <code>browser_click</code>, <code>browser_type</code>, <code>browser_screenshot</code>, and <code>browser_scroll</code> tools for full page interaction.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Agent Workflow ─── -->
+  <section>
+    <div class="section-title">Typical Agent Workflow</div>
+    <div class="section-sub">This is the observe-think-act loop that AI agents follow when using AgentBrowser.</div>
+
+    <div class="arch-diagram">
+      <div class="layer" style="border-color:var(--accent)">
+        <div class="layer-title">&#9312; CREATE SESSION</div>
+        <code>POST /api/browser/sessions</code> &rarr; Receive <code>session_id</code>
+      </div>
+      <div style="text-align:center;color:var(--fg-muted);padding:0.5rem">&#8595;</div>
+      <div class="layer" style="border-color:var(--cyan)">
+        <div class="layer-title">&#9313; NAVIGATE</div>
+        <code>POST /api/browser/sessions/{id}/action</code> with <code>{"action":"navigate","target":"https://..."}</code>
+      </div>
+      <div style="text-align:center;color:var(--fg-muted);padding:0.5rem">&#8595;</div>
+      <div class="layer" style="border-color:#a855f7">
+        <div class="layer-title">&#9314; OBSERVE (Vision AI)</div>
+        <code>POST /api/browser/sessions/{id}/vision</code> &rarr; Get screenshot, DOM, interactive elements
+      </div>
+      <div style="text-align:center;color:var(--fg-muted);padding:0.5rem">&#8595;</div>
+      <div class="layer" style="border-color:#f59e0b">
+        <div class="layer-title">&#9315; THINK (LLM Decision)</div>
+        LLM analyzes vision data &rarr; Decides next action (click, type, scroll, etc.)
+      </div>
+      <div style="text-align:center;color:var(--fg-muted);padding:0.5rem">&#8595;</div>
+      <div class="layer" style="border-color:#ef4444">
+        <div class="layer-title">&#9316; ACT</div>
+        <code>POST /api/browser/sessions/{id}/action</code> with chosen action and selector
+      </div>
+      <div style="text-align:center;color:var(--fg-muted);padding:0.5rem">&#8635; Repeat &#9314;-&#9316; until task complete</div>
+      <div style="text-align:center;color:var(--fg-muted);padding:0.5rem">&#8595;</div>
+      <div class="layer" style="border-color:var(--border)">
+        <div class="layer-title">&#9317; CLEANUP</div>
+        <code>DELETE /api/browser/sessions/{id}</code> &rarr; Close browser, free resources
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── API Reference ─── -->
+  <section id="api">
+    <div class="section-title">REST API Reference</div>
+    <div class="section-sub">8 endpoints covering session management, browser actions, vision, cookies, and logging.</div>
+
+    <div class="api-table-wrap">
+      <h3>Endpoints</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Method</th>
+            <th>Endpoint</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="method method-post">POST</span></td>
+            <td><code>/api/browser/sessions</code></td>
+            <td>Create a new browser session</td>
+          </tr>
+          <tr>
+            <td><span class="method method-get">GET</span></td>
+            <td><code>/api/browser/sessions</code></td>
+            <td>List all sessions</td>
+          </tr>
+          <tr>
+            <td><span class="method method-get">GET</span></td>
+            <td><code>/api/browser/sessions/:id</code></td>
+            <td>Get session details</td>
+          </tr>
+          <tr>
+            <td><span class="method method-delete">DEL</span></td>
+            <td><code>/api/browser/sessions/:id</code></td>
+            <td>Close and delete a session</td>
+          </tr>
+          <tr>
+            <td><span class="method method-post">POST</span></td>
+            <td><code>/api/browser/sessions/:id/action</code></td>
+            <td>Execute a browser action (25+ available)</td>
+          </tr>
+          <tr>
+            <td><span class="method method-post">POST</span></td>
+            <td><code>/api/browser/sessions/:id/vision</code></td>
+            <td>Get AI vision snapshot</td>
+          </tr>
+          <tr>
+            <td><span class="method method-get">GET</span> / <span class="method method-post">POST</span></td>
+            <td><code>/api/browser/sessions/:id/cookies</code></td>
+            <td>Get or set cookies</td>
+          </tr>
+          <tr>
+            <td><span class="method method-get">GET</span></td>
+            <td><code>/api/browser/sessions/:id/logs</code></td>
+            <td>Get paginated action logs</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="margin-top:2rem">
+      <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:1rem">Supported Browser Actions</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:0.5rem">
+        <code style="padding:0.5rem 0.75rem;font-size:0.78rem;border-radius:6px">navigate</code>
+        <code style="padding:0.5rem 0.75rem;font-size:0.78rem;border-radius:6px">goBack</code>
+        <code style="padding:0.5rem 0.75rem;font-size:0.78rem;border-radius:6px">goForward</code>
+        <code style="padding:0.5rem 0.75rem;font-size:0.78rem;border-radius:6px">reload</code>
+        <code style="padding:0.5rem 0.75rem;font-size:0.78rem;border-radius:6px">click</code>
+        <code style="padding:0.5rem 0.75rem;font-size:0.78rem;border-radius:6px">dblclick</code>
+        <code style="padding:0.5rem 0.75rem;font-size:0.78rem;border-radius:6px">hover</code>
+        <code style="padding:0.5rem 0.75rem;font-size:0.78rem;border-radius:6px">rightClick</code>
+        <code style="padding:0.5rem 0.75rem;font-size:0.78rem;border-radius:6px">type</code>
+        <code style="padding:0.5rem 0.75rem;font-size:0.78rem;border-radius:6px">press</code>
+        <code style="padding:0.5rem 0.75rem;font-size:0.78rem;border-radius:6px">select</code>
+        <code style="padding:0.5rem 0.75rem;font-size:0.78rem;border-radius:6px">scroll</code>
+        <code style="padding:0.5rem 0.75rem;font-size:0.78rem;border-radius:6px">wait</code>
+        <code style="padding:0.5rem 0.75rem;font-size:0.78rem;border-radius:6px">waitForSelector</code>
+        <code style="padding:0.5rem 0.75rem;font-size:0.78rem;border-radius:6px">waitForNavigation</code>
+        <code style="padding:0.5rem 0.75rem;font-size:0.78rem;border-radius:6px">screenshot</code>
+        <code style="padding:0.5rem 0.75rem;font-size:0.78rem;border-radius:6px">evaluate</code>
+        <code style="padding:0.5rem 0.75rem;font-size:0.78rem;border-radius:6px">getCookies</code>
+        <code style="padding:0.5rem 0.75rem;font-size:0.78rem;border-radius:6px">setCookies</code>
+        <code style="padding:0.5rem 0.75rem;font-size:0.78rem;border-radius:6px">clearCookies</code>
+        <code style="padding:0.5rem 0.75rem;font-size:0.78rem;border-radius:6px">getLocalStorage</code>
+        <code style="padding:0.5rem 0.75rem;font-size:0.78rem;border-radius:6px">setLocalStorage</code>
+        <code style="padding:0.5rem 0.75rem;font-size:0.78rem;border-radius:6px">clearLocalStorage</code>
+        <code style="padding:0.5rem 0.75rem;font-size:0.78rem;border-radius:6px">getUrl</code>
+        <code style="padding:0.5rem 0.75rem;font-size:0.78rem;border-radius:6px">getTitle</code>
+        <code style="padding:0.5rem 0.75rem;font-size:0.78rem;border-radius:6px">getContent</code>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Architecture ─── -->
+  <section>
+    <div class="section-title">Architecture</div>
+    <div class="section-sub">Clean layered design separating the API layer from the browser engine, with event-driven communication.</div>
+
+    <div class="arch-diagram">
+      <div class="layer" style="border-color:var(--accent)">
+        <div class="layer-title">Clients Layer</div>
+        LLM Agents &middot; CLIs &middot; Web Dashboard &middot; Custom Integrations
+      </div>
+      <div style="text-align:center;color:var(--fg-muted);padding:0.25rem">&#8595; REST API &nbsp;&nbsp;&nbsp; &#8595; WebSocket</div>
+      <div class="layer" style="border-color:var(--cyan)">
+        <div class="layer-title">Next.js API Routes</div>
+        <code>/api/browser/sessions/*</code> &middot; Input validation &middot; Error handling
+      </div>
+      <div style="text-align:center;color:var(--fg-muted);padding:0.25rem">&#8595;</div>
+      <div class="layer" style="border-color:#a855f7">
+        <div class="layer-title">Browser Engine Layer</div>
+        Session Manager &middot; Action Executor (25+ actions) &middot; Vision System (Screenshots, DOM, A11y Tree)
+      </div>
+      <div style="text-align:center;color:var(--fg-muted);padding:0.25rem">&#8595;</div>
+      <div class="layer" style="border-color:#f59e0b">
+        <div class="layer-title">Playwright</div>
+        Chromium &middot; Firefox &middot; WebKit
+      </div>
+      <div style="text-align:center;color:var(--fg-muted);padding:0.25rem">&#8595;</div>
+      <div class="layer" style="border-color:var(--border)">
+        <div class="layer-title">Persistence</div>
+        SQLite (via Prisma) &middot; Sessions &middot; Action Logs
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Tech Stack ─── -->
+  <section>
+    <div class="section-title">Tech Stack</div>
+    <div class="section-sub">Modern, production-ready technologies chosen for reliability, performance, and developer experience.</div>
+
+    <div class="features-grid">
+      <div class="feature-card" style="text-align:center;padding:1.25rem">
+        <div style="font-size:0.85rem;font-weight:700;margin-bottom:0.25rem">Next.js 16</div>
+        <div style="font-size:0.75rem;color:var(--fg-muted)">Full-stack framework</div>
+      </div>
+      <div class="feature-card" style="text-align:center;padding:1.25rem">
+        <div style="font-size:0.85rem;font-weight:700;margin-bottom:0.25rem">TypeScript</div>
+        <div style="font-size:0.75rem;color:var(--fg-muted)">End-to-end type safety</div>
+      </div>
+      <div class="feature-card" style="text-align:center;padding:1.25rem">
+        <div style="font-size:0.85rem;font-weight:700;margin-bottom:0.25rem">Playwright</div>
+        <div style="font-size:0.75rem;color:var(--fg-muted)">Browser automation engine</div>
+      </div>
+      <div class="feature-card" style="text-align:center;padding:1.25rem">
+        <div style="font-size:0.85rem;font-weight:700;margin-bottom:0.25rem">Prisma</div>
+        <div style="font-size:0.75rem;color:var(--fg-muted)">Type-safe ORM (SQLite)</div>
+      </div>
+      <div class="feature-card" style="text-align:center;padding:1.25rem">
+        <div style="font-size:0.85rem;font-weight:700;margin-bottom:0.25rem">Tailwind CSS 4</div>
+        <div style="font-size:0.75rem;color:var(--fg-muted)">Utility-first styling</div>
+      </div>
+      <div class="feature-card" style="text-align:center;padding:1.25rem">
+        <div style="font-size:0.85rem;font-weight:700;margin-bottom:0.25rem">shadcn/ui</div>
+        <div style="font-size:0.75rem;color:var(--fg-muted)">UI component library</div>
+      </div>
+      <div class="feature-card" style="text-align:center;padding:1.25rem">
+        <div style="font-size:0.85rem;font-weight:700;margin-bottom:0.25rem">Socket.IO</div>
+        <div style="font-size:0.75rem;color:var(--fg-muted)">Real-time WebSocket</div>
+      </div>
+      <div class="feature-card" style="text-align:center;padding:1.25rem">
+        <div style="font-size:0.85rem;font-weight:700;margin-bottom:0.25rem">Zustand</div>
+        <div style="font-size:0.75rem;color:var(--fg-muted)">State management</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Footer ─── -->
+  <footer class="footer">
+    <div class="footer-links">
+      <a href="https://github.com/smouj/agent-browser">GitHub</a>
+      <a href="https://github.com/smouj/agent-browser/issues">Issues</a>
+      <a href="https://github.com/smouj/agent-browser/blob/main/CONTRIBUTING.md">Contributing</a>
+      <a href="https://github.com/smouj/agent-browser/blob/main/LICENSE">MIT License</a>
+    </div>
+    <p>Built with Next.js, Playwright, and TypeScript</p>
+    <p style="margin-top:0.25rem;font-size:0.8rem;color:var(--fg-muted)">Made for AI agents, by developers who build with AI agents.</p>
+  </footer>
+
+</body>
+</html>
