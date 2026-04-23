@@ -1,6 +1,6 @@
 <div align="center">
 
-<img width="1254" height="1254" alt="57401968-e100-42a6-9014-893721b9d23e" src="https://github.com/user-attachments/assets/939750cb-18aa-49e0-ac28-af0a8a0c1d0f" />
+<img width="754" height="754" alt="57401968-e100-42a6-9014-893721b9d23e" src="https://github.com/user-attachments/assets/939750cb-18aa-49e0-ac28-af0a8a0c1d0f" />
 
 # AgentBrowser
 
