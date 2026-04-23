@@ -18,7 +18,7 @@
 
 [Documentation](https://smouj.github.io/agent-browser) &middot; [Quick Start](#-quick-start) &middot; [API Docs](#-rest-api) &middot; [AI Agent Guide](#-using-with-ai-agents) &middot; [Architecture](#-architecture)
 
-<img src="assets/screenshot-dashboard.png" alt="AgentBrowser Dashboard" width="100%" style="border-radius:12px;border:1px solid #333">
+<img src="assets/screenshot-wiki.png" alt="AgentBrowser browsing Wikipedia" width="100%" style="border-radius:12px;border:1px solid #333">
 
 </div>
 
@@ -535,6 +535,34 @@ agent-browser/
 ├── public/                         # Static assets
 └── package.json
 ```
+
+---
+
+## Comparison with Alternatives
+
+AgentBrowser vs other AI browser automation tools:
+
+| Feature | AgentBrowser | Browser Use | Stagehand | Playwright MCP |
+|---------|-------------|-------------|----------|----------------|
+| Self-hosted | Yes | Yes | No (cloud) | Yes |
+| REST API | 8 endpoints | No | SDK only | MCP only |
+| Multi-browser | Chromium, Firefox, WebKit | Chromium only | Chromium only | All 3 |
+| Vision AI | Screenshots, DOM, a11y tree, elements | Screenshot only | DOM only | None |
+| Session persistence | Cookies, localStorage, DB | Memory only | No | No |
+| Web Dashboard | Yes (dark theme) | No | No | No |
+| WebSocket events | Yes | No | No | No |
+| 25+ browser actions | Yes | Limited | Limited | Basic |
+| Agent agnostic | Any LLM/CLI | Python only | JS/Python | Any MCP client |
+| License | MIT | MIT | Commercial | MIT |
+| Database | SQLite + Prisma | None | Cloud | None |
+
+**Notable alternatives not in the table:**
+
+- **[LaVague](https://lavague.ai)** — RAG-based, research-focused approach with no REST API.
+- **[Skyvern](https://skyvern.com)** — Commercial cloud platform with no self-hosting option, workflow-only.
+- **WebVoyager** — Academic/research project, not production-ready.
+
+AgentBrowser is the only open-source solution that combines a full REST API, Vision AI system, session persistence, AND a web dashboard — making it the most complete platform for AI browser automation.
 
 ---
 

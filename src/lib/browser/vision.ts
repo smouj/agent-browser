@@ -39,19 +39,21 @@ class VisionSystem {
       if (options?.element) {
         const element = await page.$(options.element);
         if (element) {
-          return await element.screenshot(screenshotOptions);
+          const buf = await element.screenshot(screenshotOptions);
+          return buf.toString('base64');
         }
       }
 
       if (options?.fullPage) {
         screenshotOptions.fullPage = true;
       } else {
-        screenshotOptions.clip = await page.viewportSize().then((vp) => ({
+        const vp = await page.viewportSize();
+        screenshotOptions.clip = {
           x: 0,
           y: 0,
           width: vp?.width || 1280,
           height: vp?.height || 720,
-        }));
+        };
       }
 
       const buffer = await page.screenshot(screenshotOptions);
@@ -188,6 +190,7 @@ class VisionSystem {
 
   async getAccessibilityTree(page: Page): Promise<object> {
     try {
+      // @ts-expect-error - Playwright accessibility API
       const snapshot = await page.accessibility.snapshot();
       return snapshot as object;
     } catch (err) {

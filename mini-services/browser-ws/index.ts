@@ -140,11 +140,11 @@ io.on('connection', (socket) => {
 // or by importing and calling directly in a shared process
 
 export function broadcastToSession(sessionId: string, event: string, data: unknown) {
-  io.to(sessionId).emit(event, { ...data, timestamp: new Date().toISOString() });
+  io.to(sessionId).emit(event, { ...(typeof data === 'object' && data !== null ? data : { data }), timestamp: new Date().toISOString() });
 }
 
 export function broadcastToAll(event: string, data: unknown) {
-  io.emit(event, { ...data, timestamp: new Date().toISOString() });
+  io.emit(event, { ...(typeof data === 'object' && data !== null ? data : { data }), timestamp: new Date().toISOString() });
 }
 
 export function getActiveClients(): { total: number; sessions: string[] } {

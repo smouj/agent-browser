@@ -582,6 +582,7 @@
         <a href="#quickstart">Quick Start</a>
         <a href="#integrations">Integrations</a>
         <a href="#api">API</a>
+        <a href="#comparison">Compare</a>
       </div>
       <a href="https://github.com/smouj/agent-browser" class="nav-gh">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
@@ -681,16 +682,30 @@
 
     <div class="screenshots-grid">
       <div class="screenshot-card">
-        <img src="https://raw.githubusercontent.com/smouj/agent-browser/main/assets/screenshot-dashboard.png" alt="AgentBrowser Dashboard" loading="lazy">
-        <div class="caption"><strong>Web Dashboard</strong> &mdash; Session management, live screenshots, and browser control panel</div>
+        <img src="https://raw.githubusercontent.com/smouj/agent-browser/main/assets/screenshot-wiki.png" alt="AgentBrowser browsing Wikipedia" loading="lazy">
+        <div class="caption"><strong>Live Browsing</strong> &mdash; Real browser sessions with live screenshots and navigation controls</div>
       </div>
       <div class="screenshot-card">
         <img src="https://raw.githubusercontent.com/smouj/agent-browser/main/assets/screenshot-vision.png" alt="Vision AI Panel" loading="lazy">
-        <div class="caption"><strong>Vision AI</strong> &mdash; Screenshot, DOM tree, interactive elements, and page metadata</div>
+        <div class="caption"><strong>Vision AI</strong> &mdash; Screenshot, interactive elements, accessibility tree, and page metadata for LLMs</div>
       </div>
       <div class="screenshot-card">
-        <img src="https://raw.githubusercontent.com/smouj/agent-browser/main/assets/screenshot-api.png" alt="REST API Usage" loading="lazy">
-        <div class="caption"><strong>REST API</strong> &mdash; Full programmatic control via clean JSON endpoints</div>
+        <img src="https://raw.githubusercontent.com/smouj/agent-browser/main/assets/screenshot-actions.png" alt="Actions Panel" loading="lazy">
+        <div class="caption"><strong>25+ Actions</strong> &mdash; Click, type, scroll, wait, evaluate JS, manage cookies, and more</div>
+      </div>
+    </div>
+    <div class="screenshots-grid" style="margin-top:1.25rem">
+      <div class="screenshot-card">
+        <img src="https://raw.githubusercontent.com/smouj/agent-browser/main/assets/screenshot-dashboard.png" alt="AgentBrowser Dashboard" loading="lazy">
+        <div class="caption"><strong>Web Dashboard</strong> &mdash; Professional dark-themed UI with session management sidebar</div>
+      </div>
+      <div class="screenshot-card">
+        <img src="https://raw.githubusercontent.com/smouj/agent-browser/main/assets/screenshot-logs.png" alt="Action Logs" loading="lazy">
+        <div class="caption"><strong>Action Logs</strong> &mdash; Every browser action recorded with timing and results</div>
+      </div>
+      <div class="screenshot-card">
+        <img src="https://raw.githubusercontent.com/smouj/agent-browser/main/assets/screenshot-api.png" alt="API Reference" loading="lazy">
+        <div class="caption"><strong>API Reference</strong> &mdash; Built-in endpoint documentation and curl examples</div>
       </div>
     </div>
   </section>
@@ -1157,6 +1172,63 @@ tools = [{
       <div class="feature-card" style="text-align:center;padding:1.25rem">
         <div style="font-size:0.85rem;font-weight:700;margin-bottom:0.25rem">Zustand</div>
         <div style="font-size:0.75rem;color:var(--fg-muted)">State management</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Comparison ─── -->
+  <section id="comparison">
+    <div class="section-title">How AgentBrowser Compares</div>
+    <div class="section-sub">AgentBrowser is the most complete open-source solution for AI browser automation. Here's how it stacks up.</div>
+
+    <div class="api-table-wrap" style="overflow-x:auto">
+      <h3>Feature Comparison</h3>
+      <table style="min-width:800px">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th style="color:var(--accent)">AgentBrowser</th>
+            <th>Browser Use</th>
+            <th>Stagehand</th>
+            <th>Playwright MCP</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Self-hosted</td><td style="color:var(--accent);font-weight:600">Yes</td><td>Yes</td><td style="color:#ef4444">No (cloud)</td><td>Yes</td></tr>
+          <tr><td>REST API</td><td style="color:var(--accent);font-weight:600">8 endpoints</td><td style="color:#ef4444">No</td><td>SDK only</td><td style="color:#ef4444">MCP only</td></tr>
+          <tr><td>Multi-browser</td><td style="color:var(--accent);font-weight:600">Chromium, Firefox, WebKit</td><td>Chromium only</td><td>Chromium only</td><td>All 3</td></tr>
+          <tr><td>Vision AI</td><td style="color:var(--accent);font-weight:600">Screenshot, DOM, a11y, elements</td><td>Screenshot only</td><td>DOM only</td><td style="color:#ef4444">None</td></tr>
+          <tr><td>Session persistence</td><td style="color:var(--accent);font-weight:600">Cookies, localStorage, DB</td><td>Memory only</td><td style="color:#ef4444">No</td><td style="color:#ef4444">No</td></tr>
+          <tr><td>Web Dashboard</td><td style="color:var(--accent);font-weight:600">Yes (dark theme)</td><td style="color:#ef4444">No</td><td style="color:#ef4444">No</td><td style="color:#ef4444">No</td></tr>
+          <tr><td>WebSocket events</td><td style="color:var(--accent);font-weight:600">Yes</td><td style="color:#ef4444">No</td><td style="color:#ef4444">No</td><td style="color:#ef4444">No</td></tr>
+          <tr><td>Browser actions</td><td style="color:var(--accent);font-weight:600">25+</td><td>Limited</td><td>Limited</td><td>Basic</td></tr>
+          <tr><td>Agent agnostic</td><td style="color:var(--accent);font-weight:600">Any LLM / CLI</td><td>Python only</td><td>JS / Python</td><td>Any MCP client</td></tr>
+          <tr><td>License</td><td style="color:var(--accent);font-weight:600">MIT</td><td>MIT</td><td>Commercial</td><td>MIT</td></tr>
+          <tr><td>Database</td><td style="color:var(--accent);font-weight:600">SQLite + Prisma</td><td style="color:#ef4444">None</td><td>Cloud</td><td style="color:#ef4444">None</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="margin-top:2rem;padding:1.5rem;background:var(--accent-glow);border:1px solid rgba(16,185,129,0.3);border-radius:12px;font-size:0.9rem;line-height:1.7">
+      <strong style="color:var(--accent)">Why AgentBrowser?</strong><br>
+      AgentBrowser is the <strong>only</strong> open-source solution that combines a full REST API, Vision AI system, session persistence, WebSocket real-time events, AND a web dashboard &mdash; making it the most complete and production-ready platform for AI browser automation. Whether you're using OpenClaw, Hermes, OpenAI, Anthropic, or a custom agent framework, AgentBrowser gives your AI agent real eyes and hands on the web.
+    </div>
+
+    <div style="margin-top:1.5rem">
+      <h3 style="font-size:1rem;font-weight:700;margin-bottom:1rem">Other Notable Projects</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1rem">
+        <div style="background:var(--bg-secondary);border:1px solid var(--border);border-radius:8px;padding:1rem;font-size:0.85rem">
+          <strong>LaVague</strong> <span style="color:var(--fg-muted)">(lavague.ai)</span><br>
+          <span style="color:var(--fg-muted)">RAG-based approach, research-focused. No REST API, no session management.</span>
+        </div>
+        <div style="background:var(--bg-secondary);border:1px solid var(--border);border-radius:8px;padding:1rem;font-size:0.85rem">
+          <strong>Skyvern</strong> <span style="color:var(--fg-muted)">(skyvern.com)</span><br>
+          <span style="color:var(--fg-muted)">Commercial cloud platform. No self-hosting, workflow-only approach.</span>
+        </div>
+        <div style="background:var(--bg-secondary);border:1px solid var(--border);border-radius:8px;padding:1rem;font-size:0.85rem">
+          <strong>WebVoyager</strong> <span style="color:var(--fg-muted)">(academic)</span><br>
+          <span style="color:var(--fg-muted)">Research paper, not production-ready. Limited action set.</span>
+        </div>
       </div>
     </div>
   </section>
