@@ -1,0 +1,52 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Post {
+  id        String   @id @default(cuid())
+  title     String
+  content   String?
+  published Boolean  @default(false)
+  authorId  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model BrowserSession {
+  id            String   @id @default(cuid())
+  name          String
+  browserType   String   @default("chromium")
+  status        String   @default("active")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  cookies       String   @default("[]")
+  localStorage  String   @default("{}")
+  metadata      String   @default("{}")
+  actions       ActionLog[]
+}
+
+model ActionLog {
+  id        String   @id @default(cuid())
+  sessionId String
+  session   BrowserSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  action    String
+  target    String?
+  value     String?
+  result    String?
+  duration  Int?
+  createdAt DateTime @default(now())
+  metadata  String   @default("{}")
+}
